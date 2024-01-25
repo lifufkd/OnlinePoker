@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>rules</class>
+ <widget class="QMainWindow" name="rules">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>585</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(61, 217, 245), stop:1 rgb(240, 53, 218));
+font-family: ljk_OCRA;
+         font-weight: bold;
+            color: rgb(255, 255, 255);
+            border-style: solid;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="btn_exitgame">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>540</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+    </property>
+    <property name="text">
+     <string>закрыть правила</string>
+    </property>
+    <property name="icon">
+     <iconset resource="icon.qrc">
+      <normaloff>:/newPrefix/icons/cil-door.png</normaloff>:/newPrefix/icons/cil-door.png</iconset>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>20</y>
+      <width>441</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font-size: 24px;
+border-radius: 7px;
+background-color: rgb(149, 149, 255);</string>
+    </property>
+    <property name="text">
+     <string>Правила игры</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>70</y>
+      <width>751</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+font-size: 17px;
+</string>
+    </property>
+    <property name="text">
+     <string>Большой блайнд. Игрок, который сидит слева от малого блайнда. Он ставит минимальную ставку в игре, которая в два раза больше ставки предыдущего игрока.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>140</y>
+      <width>751</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+font-size: 17px;
+</string>
+    </property>
+    <property name="text">
+     <string>Малый блайнд в покере выполняет участник, который расположился первым по левую сторону от баттона. Сумма равняется 1/2 ставки, которая была установлена в конкретной раздаче.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>751</width>
+      <height>211</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+font-size: 17px;
+</string>
+    </property>
+    <property name="text">
+     <string>Если игрок делает ставку следующим, то есть поддерживает какую-либо ставку, то он выбирает, показывать карты в конце или нет.
+
+Если игрок поддержал ставку и проиграл, то он может скинуть карты, не открывая их.
+
+Очередность отображения карт при вскрытии начинается с того, кто поставил наибольшую ставку в предыдущем кону, в случае, если игрок идет «олл ин», то карты вскрываются обязательно.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
+ <connections/>
+</ui>

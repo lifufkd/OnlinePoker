@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>pre_lobby</class>
+ <widget class="QMainWindow" name="pre_lobby">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>982</width>
+    <height>602</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb(61, 217, 245), stop:1 rgb(240, 53, 218));
+font-family: ljk_OCRA;
+         font-weight: bold;
+            color: rgb(255, 255, 255);
+            border-style: solid;</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="label_all">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>991</width>
+      <height>611</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: None;
+border-style: None;</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QPushButton" name="btn_create">
+     <property name="geometry">
+      <rect>
+       <x>500</x>
+       <y>480</y>
+       <width>181</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>создать лобби</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-settings.png</normaloff>:/newPrefix/icons/cil-settings.png</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>0</y>
+       <width>611</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>40</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+</string>
+     </property>
+     <property name="text">
+      <string>Подключение к игре</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_full">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>17</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>лобби полное</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_exists">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>15</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>такое название
+уже существует</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_empty">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>17</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>поля не могут
+быть пустыми</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_join">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>480</y>
+       <width>181</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>12</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>присоединиться</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-user-follow.png</normaloff>:/newPrefix/icons/cil-user-follow.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_exitgame">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>500</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>выйти из игры</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-account-logout.png</normaloff>:/newPrefix/icons/cil-account-logout.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_logout">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>450</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 7px;
+background-color: rgb(149, 149, 255);</string>
+     </property>
+     <property name="text">
+      <string>выйти из аккаунта</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-door.png</normaloff>:/newPrefix/icons/cil-door.png</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_not_selected">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>260</y>
+       <width>231</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>-1</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+font-size: 17px;</string>
+     </property>
+     <property name="text">
+      <string>вы не выбрали лобби</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame_add">
+     <property name="geometry">
+      <rect>
+       <x>710</x>
+       <y>90</y>
+       <width>251</width>
+       <height>381</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>18</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+</string>
+     </property>
+     <widget class="QLineEdit" name="lineEdit_lobby_name">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>ljk_OCRA</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font-family: ljk_OCRA;
+         font-weight: bold;
+            color: rgb(255, 255, 255);
+            border-style: solid;
+            border-radius:21px;
+border-radius: 7px;</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Введите название лобби</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_confirm">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>140</y>
+        <width>121</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>ljk_OCRA</family>
+        <pointsize>10</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>OpenHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+      </property>
+      <property name="text">
+       <string>подтвердить</string>
+      </property>
+      <property name="icon">
+       <iconset resource="icon.qrc">
+        <normaloff>:/newPrefix/icons/cil-check-circle.png</normaloff>:/newPrefix/icons/cil-check-circle.png</iconset>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_small_blind">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>ljk_OCRA</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font-family: ljk_OCRA;
+         font-weight: bold;
+            color: rgb(255, 255, 255);
+            border-style: solid;
+            border-radius:21px;
+border-radius: 7px;</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Введите младшую руку</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_big_blind">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>231</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>ljk_OCRA</family>
+        <pointsize>13</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font-family: ljk_OCRA;
+         font-weight: bold;
+            color: rgb(255, 255, 255);
+            border-style: solid;
+            border-radius:21px;
+border-radius: 7px;</string>
+      </property>
+      <property name="inputMask">
+       <string/>
+      </property>
+      <property name="placeholderText">
+       <string>Введите старшую руку</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>220</y>
+       <width>181</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">image: url(:/photos/icons/25451e51f89d681ca1d40d9c703e9578.jpg);
+background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_profile">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>70</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>Профиль</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-home.png</normaloff>:/newPrefix/icons/cil-home.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_rules">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>120</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>правила игры</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-notes.png</normaloff>:/newPrefix/icons/cil-notes.png</iconset>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_admin">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>550</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius: 7px;
+image: url(:/newPrefix/icons/cil-briefcase.png);
+background-color: rgb(149, 149, 255);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="listWidget">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>90</y>
+       <width>401</width>
+       <height>381</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>17</pointsize>
+       <bold>true</bold>
+       <kerning>true</kerning>
+      </font>
+     </property>
+     <property name="cursor" stdset="0">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_statistic">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>170</y>
+       <width>171</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>OpenHandCursor</cursorShape>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+background-color: rgb(149, 149, 255);
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>посмотреть статистику</string>
+     </property>
+     <property name="icon">
+      <iconset resource="icon.qrc">
+       <normaloff>:/newPrefix/icons/cil-chart-line.png</normaloff>:/newPrefix/icons/cil-chart-line.png</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_load">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>120</y>
+       <width>301</width>
+       <height>304</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>9</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: none;
+
+
+</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_not_valid">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>14</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>введены неве
+рные значения</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_size_error">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>10</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>старшая рука не может
+быть меньше младшей</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_not_enough">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>330</y>
+       <width>181</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>10</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgba(255,255,255,30);
+border: 1px solid rgba(255,255,255,40);
+border-style: solid;
+font-family: ljk_OCRA;
+border-radius: 7px;</string>
+     </property>
+     <property name="text">
+      <string>недостаточно средств
+для старшей руки</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <zorder>frame_add</zorder>
+    <zorder>btn_create</zorder>
+    <zorder>label</zorder>
+    <zorder>label_full</zorder>
+    <zorder>label_exists</zorder>
+    <zorder>label_empty</zorder>
+    <zorder>btn_join</zorder>
+    <zorder>btn_exitgame</zorder>
+    <zorder>btn_logout</zorder>
+    <zorder>label_not_selected</zorder>
+    <zorder>frame_2</zorder>
+    <zorder>btn_profile</zorder>
+    <zorder>btn_rules</zorder>
+    <zorder>btn_admin</zorder>
+    <zorder>listWidget</zorder>
+    <zorder>btn_statistic</zorder>
+    <zorder>label_load</zorder>
+    <zorder>label_not_valid</zorder>
+    <zorder>label_size_error</zorder>
+    <zorder>label_not_enough</zorder>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
+ <connections/>
+</ui>

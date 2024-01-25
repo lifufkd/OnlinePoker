@@ -1,0 +1,10 @@
+certs/crt_chat-room.myvnc.com
+/compiled_builds
+/OLD
+/compiler_args.txt
+/debug_log.txt
+/Poker.exe
+/Server.exe
+/users.db
+/venv
+/.idea

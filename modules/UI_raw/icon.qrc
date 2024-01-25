@@ -1,0 +1,22 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>icons/cil-user-follow.png</file>
+    <file>icons/cil-credit-card.png</file>
+    <file>icons/cil-medical-cross.png</file>
+    <file>images/faux-silk-150236.jpg</file>
+    <file>images/без теней1.png</file>
+    <file>icons/cil-x-circle.png</file>
+    <file>icons/cil-power-standby.png</file>
+    <file>icons/cil-settings.png</file>
+    <file>icons/cil-cursor.png</file>
+    <file>icons/cil-chart-line.png</file>
+    <file>icons/cil-chevron-bottom.png</file>
+    <file>icons/cil-notes.png</file>
+    <file>icons/cil-home.png</file>
+    <file>icons/cil-door.png</file>
+    <file>icons/cil-account-logout.png</file>
+    <file>icons/cil-face-dead.png</file>
+    <file>icons/cil-check-circle.png</file>
+    <file>icons/cil-briefcase.png</file>
+  </qresource>
+</RCC>
