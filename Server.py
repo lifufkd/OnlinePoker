@@ -222,7 +222,7 @@ def game_c(lobby_name):
             out[i + 1].append(0)
     out.append(deck)
     active_games.update({lobby_name: out})
-    active_games_events.update({lobby_name: [threading.Event(), False]})
+    active_games_events.update({lobby_name: [threading.Event(), None, None]})
     shadow_data.update({lobby_name: []})
     while True:
         if startup:
@@ -241,7 +241,8 @@ def game_c(lobby_name):
                             i.send(pickle.dumps(active_games[lobby_name])) # name, card1, card2, money, dealer, small_bl, big_bl, text_bet, step, summ_rnd_bet
                             time.sleep(0.01)
                 if timer:
-                    threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][index][0])).start()
+                    active_games_events[lobby_name][1] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][index][0], True))
+                    active_games_events[lobby_name][1].start()
                     timer = False
                 shadow_data = copy.deepcopy(active_games)
         else:
@@ -508,33 +509,27 @@ def log_in_calc(data, client):
         return [2, 1]
 
 
-def visual_timer(lobby_name, player_name):
-    print(f'visual open')
+def game_timer(lobby_name, player_name, start=False):
     index = -1
+    print(f'timer {active_games_events[lobby_name][0].is_set()}, {lobby_name}, {player_name}')
+    if not start:
+        while active_games_events[lobby_name][1].is_alive():
+            time.sleep(0.01)
+        active_games_events[lobby_name][1] = active_games_events[lobby_name][2]
+        active_games_events[lobby_name][2] = None
     for i in range(len(active_games[lobby_name][1:-1])):
         if active_games[lobby_name][i + 1][0] == player_name:
             index = i + 1
         else:
             active_games[lobby_name][i + 1][10] = 0
-    for i in reversed(range(0, 3100)):
-        if active_games_events[lobby_name][1]: break
-        if (i / 100).is_integer():
-            active_games[lobby_name][index][10] = int(i / 100)
-        time.sleep(0.01)
-    print(f'visual close')
-
-
-def game_timer(lobby_name, player_name):
-    print(f'timer {active_games_events[lobby_name][0].is_set()}, {lobby_name}, {player_name}')
-    threading.Thread(target=visual_timer, args=(lobby_name, player_name)).start()
-    active_games_events[lobby_name][0].wait(timeout=30)
-    active_games_events[lobby_name][1] = True
+    for i in reversed(range(30)):
+        if active_games_events[lobby_name][0].is_set(): break
+        active_games[lobby_name][index][10] = int(i)
+        time.sleep(1)
     if not active_games_events[lobby_name][0].is_set():
         fold(lobby_name, player_name)
     active_games_events[lobby_name][0].clear()
-    active_games_events[lobby_name][1] = False
     print('TIMER_close')
-
 
 
 def client_handler(client):
@@ -791,174 +786,189 @@ def client_handler(client):
                         clients[client][15] = True
                     if data[0] == 1:
                         active_games_events[lobby_name][0].set()
-                        for i in range(len(active_games[lobby_name][1:])):
-                            if active_games[lobby_name][i + 1][0] == name:
-                                if not active_games[lobby_name][i + 1][8] == active_games[lobby_name][-1][6]:
-                                    if not (active_games[lobby_name][i + 1][3] - (
-                                            active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8]) <= 0):
+                        if active_games_events[lobby_name][2] is None:
+                            for i in range(len(active_games[lobby_name][1:])):
+                                if active_games[lobby_name][i + 1][0] == name:
+                                    if not active_games[lobby_name][i + 1][8] == active_games[lobby_name][-1][6]:
+                                        if not (active_games[lobby_name][i + 1][3] - (
+                                                active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8]) <= 0):
+                                            active_games[lobby_name][-1][8] += 1
+                                            active_games[lobby_name][-1][9], active_games[lobby_name][-1][
+                                                8] = round_control(lobby_name, active_games[lobby_name][-1][9],
+                                                                   active_games[lobby_name][-1][8])
+                                            active_games[lobby_name][-1][5] += active_games[lobby_name][-1][6] - \
+                                                                               active_games[lobby_name][i + 1][8]
+                                            active_games[lobby_name][i + 1][3] -= active_games[lobby_name][-1][6] - \
+                                                                                  active_games[lobby_name][i + 1][8]
+                                            active_games[lobby_name][i + 1][
+                                                7] = f'CALL {active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8]}$'
+                                            active_games[lobby_name][i + 1][8] += active_games[lobby_name][-1][6] - \
+                                                                                  active_games[lobby_name][i + 1][8]
+                                            if not (active_games[lobby_name][-1][10] and len(
+                                                    active_games[lobby_name][1:-1]) == 1):
+                                                active_games[lobby_name][i + 1][9] = False
+                                                if i > 0:
+                                                    active_games[lobby_name][i][9] = True
+                                                    active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                                    active_games_events[lobby_name][2].start()
+                                                else:
+                                                    active_games[lobby_name][-2][9] = True
+                                                    active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                                    active_games_events[lobby_name][2].start()
+                                        else:
+                                            active_games[lobby_name][-1][10] = True
+                                            active_games[lobby_name][-1][11] += 1
+                                            active_games[lobby_name][-1][5] += active_games[lobby_name][i + 1][3]
+                                            active_games[lobby_name][i + 1][8] += active_games[lobby_name][i + 1][3]
+                                            send_game_exit_broad(lobby_name, name, False, True, 'ALL IN')
+                                            active_games[lobby_name][i + 1][3] = 0
+                                            name_deck_players[lobby_name].remove(name)
+                                            active_games[lobby_name][i + 1].append(1)
+                                            active_games[lobby_name][-1][8] -= len(name_deck_players[lobby_name])
+                                            active_games[lobby_name][-1][9] = True
+                                            active_games[lobby_name][-1][9], active_games[lobby_name][-1][
+                                                8] = round_control(lobby_name, active_games[lobby_name][-1][9],
+                                                                   active_games[lobby_name][-1][8])
+                                            if not (active_games[lobby_name][-1][10] and len(
+                                                    active_games[lobby_name][1:-1]) == 1):
+                                                active_games[lobby_name][i + 1][9] = False
+                                                if i > 0:
+                                                    active_games[lobby_name][i][9] = True
+                                                    active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                                    active_games_events[lobby_name][2].start()
+                                                else:
+                                                    active_games[lobby_name][-2][9] = True
+                                                    active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                                    active_games_events[lobby_name][2].start()
+                                            if lobby_name in exited_active_game.keys():
+                                                exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
+                                            else:
+                                                exited_active_game.update(
+                                                    {lobby_name: [active_games[lobby_name].pop(i + 1)]})
+                                    else:
                                         active_games[lobby_name][-1][8] += 1
                                         active_games[lobby_name][-1][9], active_games[lobby_name][-1][
                                             8] = round_control(lobby_name, active_games[lobby_name][-1][9],
                                                                active_games[lobby_name][-1][8])
-                                        active_games[lobby_name][-1][5] += active_games[lobby_name][-1][6] - \
-                                                                           active_games[lobby_name][i + 1][8]
-                                        active_games[lobby_name][i + 1][3] -= active_games[lobby_name][-1][6] - \
-                                                                              active_games[lobby_name][i + 1][8]
-                                        active_games[lobby_name][i + 1][
-                                            7] = f'CALL {active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8]}$'
-                                        active_games[lobby_name][i + 1][8] += active_games[lobby_name][-1][6] - \
-                                                                              active_games[lobby_name][i + 1][8]
+                                        active_games[lobby_name][i + 1][7] = 'CHECK'
                                         if not (active_games[lobby_name][-1][10] and len(
                                                 active_games[lobby_name][1:-1]) == 1):
                                             active_games[lobby_name][i + 1][9] = False
                                             if i > 0:
                                                 active_games[lobby_name][i][9] = True
-                                                threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
+                                                active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                                active_games_events[lobby_name][2].start()
                                             else:
                                                 active_games[lobby_name][-2][9] = True
-                                                threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
-                                    else:
+                                                active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                                active_games_events[lobby_name][2].start()
+                                    break
+                    elif data[0] == 2:
+                        if active_games_events[lobby_name][2] is None:
+                            for i in range(len(active_games[lobby_name][1:])):
+                                if active_games[lobby_name][i + 1][0] == name:
+                                    if data[1] == active_games[lobby_name][i + 1][3]:
+                                        active_games_events[lobby_name][0].set()
                                         active_games[lobby_name][-1][10] = True
                                         active_games[lobby_name][-1][11] += 1
                                         active_games[lobby_name][-1][5] += active_games[lobby_name][i + 1][3]
                                         active_games[lobby_name][i + 1][8] += active_games[lobby_name][i + 1][3]
+                                        active_games[lobby_name][-1][6] += active_games[lobby_name][i + 1][3]
                                         send_game_exit_broad(lobby_name, name, False, True, 'ALL IN')
                                         active_games[lobby_name][i + 1][3] = 0
                                         name_deck_players[lobby_name].remove(name)
                                         active_games[lobby_name][i + 1].append(1)
                                         active_games[lobby_name][-1][8] -= len(name_deck_players[lobby_name])
                                         active_games[lobby_name][-1][9] = True
-                                        active_games[lobby_name][-1][9], active_games[lobby_name][-1][
-                                            8] = round_control(lobby_name, active_games[lobby_name][-1][9],
-                                                               active_games[lobby_name][-1][8])
-                                        if not (active_games[lobby_name][-1][10] and len(
-                                                active_games[lobby_name][1:-1]) == 1):
-                                            active_games[lobby_name][i + 1][9] = False
-                                            if i > 0:
-                                                active_games[lobby_name][i][9] = True
-                                                threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
-                                            else:
-                                                active_games[lobby_name][-2][9] = True
-                                                threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
-                                        if lobby_name in exited_active_game.keys():
-                                            exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
-                                        else:
-                                            exited_active_game.update(
-                                                {lobby_name: [active_games[lobby_name].pop(i + 1)]})
-                                else:
-                                    active_games[lobby_name][-1][8] += 1
-                                    active_games[lobby_name][-1][9], active_games[lobby_name][-1][
-                                        8] = round_control(lobby_name, active_games[lobby_name][-1][9],
-                                                           active_games[lobby_name][-1][8])
-                                    active_games[lobby_name][i + 1][7] = 'CHECK'
-                                    if not (active_games[lobby_name][-1][10] and len(
-                                            active_games[lobby_name][1:-1]) == 1):
+                                        active_games[lobby_name][-1][9], active_games[lobby_name][-1][8] = round_control(
+                                            lobby_name, active_games[lobby_name][-1][9], active_games[lobby_name][-1][8])
                                         active_games[lobby_name][i + 1][9] = False
                                         if i > 0:
                                             active_games[lobby_name][i][9] = True
-                                            threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
+                                            active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                            active_games_events[lobby_name][2].start()
                                         else:
                                             active_games[lobby_name][-2][9] = True
-                                            threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
-                                break
-                    elif data[0] == 2:
-                        for i in range(len(active_games[lobby_name][1:])):
-                            if active_games[lobby_name][i + 1][0] == name:
-                                if data[1] == active_games[lobby_name][i + 1][3]:
-                                    active_games_events[lobby_name][0].set()
-                                    active_games[lobby_name][-1][10] = True
-                                    active_games[lobby_name][-1][11] += 1
-                                    active_games[lobby_name][-1][5] += active_games[lobby_name][i + 1][3]
-                                    active_games[lobby_name][i + 1][8] += active_games[lobby_name][i + 1][3]
-                                    active_games[lobby_name][-1][6] += active_games[lobby_name][i + 1][3]
-                                    send_game_exit_broad(lobby_name, name, False, True, 'ALL IN')
-                                    active_games[lobby_name][i + 1][3] = 0
-                                    name_deck_players[lobby_name].remove(name)
-                                    active_games[lobby_name][i + 1].append(1)
-                                    active_games[lobby_name][-1][8] -= len(name_deck_players[lobby_name])
-                                    active_games[lobby_name][-1][9] = True
-                                    active_games[lobby_name][-1][9], active_games[lobby_name][-1][8] = round_control(
-                                        lobby_name, active_games[lobby_name][-1][9], active_games[lobby_name][-1][8])
-                                    active_games[lobby_name][i + 1][9] = False
-                                    if i > 0:
-                                        active_games[lobby_name][i][9] = True
-                                        threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
+                                            active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                            active_games_events[lobby_name][2].start()
+                                        if lobby_name in exited_active_game.keys():
+                                            exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
+                                        else:
+                                            exited_active_game.update({lobby_name: [active_games[lobby_name].pop(i + 1)]})
+                                    elif active_games[lobby_name][i + 1][3] - data[1] + (
+                                            active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8]) <= 0:
+                                        client.send(pickle.dumps([7]))
+                                    elif data[1] < active_games[lobby_name][-1][6] + 1:
+                                        client.send(pickle.dumps([3]))
                                     else:
-                                        active_games[lobby_name][-2][9] = True
-                                        threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
-                                    if lobby_name in exited_active_game.keys():
-                                        exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
-                                    else:
-                                        exited_active_game.update({lobby_name: [active_games[lobby_name].pop(i + 1)]})
-                                elif active_games[lobby_name][i + 1][3] - data[1] + (
-                                        active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8]) <= 0:
-                                    client.send(pickle.dumps([7]))
-                                elif data[1] < active_games[lobby_name][-1][6] + 1:
-                                    client.send(pickle.dumps([3]))
-                                else:
-                                    active_games_events[lobby_name][0].set()
-                                    active_games[lobby_name][i + 1][7] = f'RAISE {data[1]}$'
-                                    active_games[lobby_name][-1][8] += 1
-                                    active_games[lobby_name][-1][9] = True
-                                    active_games[lobby_name][-1][9], active_games[lobby_name][-1][8] = round_control(
-                                        lobby_name, active_games[lobby_name][-1][9], active_games[lobby_name][-1][8])
-                                    active_games[lobby_name][-1][5] += data[1] + (
-                                            active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8])
-                                    active_games[lobby_name][i + 1][3] -= data[1] + (
-                                            active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8])
-                                    active_games[lobby_name][i + 1][8] += data[1] + (
-                                            active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8])
-                                    active_games[lobby_name][-1][6] += data[1]
-                                    active_games[lobby_name][i + 1][9] = False
-                                    if i > 0:
-                                        active_games[lobby_name][i][9] = True
-                                        threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
-                                    else:
-                                        active_games[lobby_name][-2][9] = True
-                                        threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
-                                break
+                                        active_games_events[lobby_name][0].set()
+                                        active_games[lobby_name][i + 1][7] = f'RAISE {data[1]}$'
+                                        active_games[lobby_name][-1][8] += 1
+                                        active_games[lobby_name][-1][9] = True
+                                        active_games[lobby_name][-1][9], active_games[lobby_name][-1][8] = round_control(
+                                            lobby_name, active_games[lobby_name][-1][9], active_games[lobby_name][-1][8])
+                                        active_games[lobby_name][-1][5] += data[1] + (
+                                                active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8])
+                                        active_games[lobby_name][i + 1][3] -= data[1] + (
+                                                active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8])
+                                        active_games[lobby_name][i + 1][8] += data[1] + (
+                                                active_games[lobby_name][-1][6] - active_games[lobby_name][i + 1][8])
+                                        active_games[lobby_name][-1][6] += data[1]
+                                        active_games[lobby_name][i + 1][9] = False
+                                        if i > 0:
+                                            active_games[lobby_name][i][9] = True
+                                            active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                            active_games_events[lobby_name][2].start()
+                                        else:
+                                            active_games[lobby_name][-2][9] = True
+                                            active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                            active_games_events[lobby_name][2].start()
+                                    break
 
                     elif data[0] == 3:
                         active_games_events[lobby_name][0].set()
                         fold(lobby_name, name)
                     elif data[0] == 4:
                         active_games_events[lobby_name][0].set()
-                        if lobby_name in exited_active_game.keys():
-                            for i in range(len(exited_active_game[lobby_name])):
-                                if exited_active_game[lobby_name][i][0] == name:
-                                    if exited_active_game[lobby_name][i][-1] == 1 and active_games[lobby_name][-1][11] == 1:
-                                        active_games[lobby_name][-1][10] = False
-                                    exited_active_game[lobby_name][i][-1] = 3
+                        if active_games_events[lobby_name][2] is None:
+                            if lobby_name in exited_active_game.keys():
+                                for i in range(len(exited_active_game[lobby_name])):
+                                    if exited_active_game[lobby_name][i][0] == name:
+                                        if exited_active_game[lobby_name][i][-1] == 1 and active_games[lobby_name][-1][11] == 1:
+                                            active_games[lobby_name][-1][10] = False
+                                        exited_active_game[lobby_name][i][-1] = 3
+                                        clients[client][13] = False
+                                        clients[client][14] = False
+                                        clients[client][15] = False
+                                        client.send(pickle.dumps([5]))
+                                        send_game_exit_broad(lobby_name, name, True, False, None)
+                                        break
+                            for i in range(len(active_games[lobby_name][1:])):
+                                if active_games[lobby_name][i + 1][0] == name:
+                                    name_deck_players[lobby_name].remove(name)
+                                    active_games[lobby_name][i + 1].append(3)
+                                    active_games[lobby_name][-1][8] -= len(name_deck_players[lobby_name]) + 1
+                                    active_games[lobby_name][-1][9], active_games[lobby_name][-1][8] = round_control(
+                                        lobby_name, active_games[lobby_name][-1][9], active_games[lobby_name][-1][8])
                                     clients[client][13] = False
                                     clients[client][14] = False
                                     clients[client][15] = False
                                     client.send(pickle.dumps([5]))
                                     send_game_exit_broad(lobby_name, name, True, False, None)
-                                    break
-                        for i in range(len(active_games[lobby_name][1:])):
-                            if active_games[lobby_name][i + 1][0] == name:
-                                name_deck_players[lobby_name].remove(name)
-                                active_games[lobby_name][i + 1].append(3)
-                                active_games[lobby_name][-1][8] -= len(name_deck_players[lobby_name]) + 1
-                                active_games[lobby_name][-1][9], active_games[lobby_name][-1][8] = round_control(
-                                    lobby_name, active_games[lobby_name][-1][9], active_games[lobby_name][-1][8])
-                                clients[client][13] = False
-                                clients[client][14] = False
-                                clients[client][15] = False
-                                client.send(pickle.dumps([5]))
-                                send_game_exit_broad(lobby_name, name, True, False, None)
-                                if not (active_games[lobby_name][-1][10] and len(active_games[lobby_name][1:-1]) == 1):
-                                    if i > 0:
-                                        active_games[lobby_name][i][9] = True
-                                        threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
+                                    if not (active_games[lobby_name][-1][10] and len(active_games[lobby_name][1:-1]) == 1):
+                                        if i > 0:
+                                            active_games[lobby_name][i][9] = True
+                                            active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                            active_games_events[lobby_name][2].start()
+                                        else:
+                                            active_games[lobby_name][-2][9] = True
+                                            active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                            active_games_events[lobby_name][2].start()
+                                    if lobby_name in exited_active_game.keys():
+                                        exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
                                     else:
-                                        active_games[lobby_name][-2][9] = True
-                                        threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
-                                if lobby_name in exited_active_game.keys():
-                                    exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
-                                else:
-                                    exited_active_game.update({lobby_name: [active_games[lobby_name].pop(i + 1)]})
-                                break
+                                        exited_active_game.update({lobby_name: [active_games[lobby_name].pop(i + 1)]})
+                                    break
                     elif data[0] == 5:
                         client.send(pickle.dumps([2]))
         except:
@@ -992,12 +1002,15 @@ def client_handler(client):
                                     lobby[lobby_name].remove(client)
                                     send_game_exit_broad(lobby_name, name, True, False, None)
                                     if not (active_games[lobby_name][-1][10] and active_games[lobby_name][1:-1] == 1):
-                                        if i > 0:
-                                            active_games[lobby_name][i][9] = True
-                                            threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
-                                        else:
-                                            active_games[lobby_name][-2][9] = True
-                                            threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
+                                        if active_games_events[lobby_name][2] is None:
+                                            if i > 0:
+                                                active_games[lobby_name][i][9] = True
+                                                active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                                                active_games_events[lobby_name][2].start()
+                                            else:
+                                                active_games[lobby_name][-2][9] = True
+                                                active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                                                active_games_events[lobby_name][2].start()
                                     if lobby_name in exited_active_game.keys():
                                         exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
                                     else:
@@ -1032,10 +1045,12 @@ def fold(lobby_name, name):
             if not (active_games[lobby_name][-1][10] and len(active_games[lobby_name][1:-1]) == 1):
                 if i > 0:
                     active_games[lobby_name][i][9] = True
-                    threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0])).start()
+                    active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][i][0]))
+                    active_games_events[lobby_name][2].start()
                 else:
                     active_games[lobby_name][-2][9] = True
-                    threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0])).start()
+                    active_games_events[lobby_name][2] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][-2][0]))
+                    active_games_events[lobby_name][2].start()
             if lobby_name in exited_active_game.keys():
                 exited_active_game[lobby_name].append(active_games[lobby_name].pop(i + 1))
             else:
