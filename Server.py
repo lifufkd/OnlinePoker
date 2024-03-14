@@ -522,10 +522,11 @@ def game_timer(lobby_name, player_name, start=False):
                 index = i + 1
             else:
                 active_games[lobby_name][i + 1][10] = 0
-        for i in reversed(range(30)):
+        for i in reversed(range(0, 3000)):
             if active_games_events[lobby_name][0].is_set(): break
-            active_games[lobby_name][index][10] = int(i)
-            time.sleep(1)
+            if (i / 100).is_integer():
+                active_games[lobby_name][index][10] = int(i / 100)
+            time.sleep(0.01)
         if not active_games_events[lobby_name][0].is_set():
             fold(lobby_name, player_name)
         active_games_events[lobby_name][0].clear()
