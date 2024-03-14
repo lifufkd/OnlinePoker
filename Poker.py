@@ -38,9 +38,9 @@ from modules.UI.statistic import Ui_statistic
 from datetime import datetime, timezone
 
 #############################CHANGEABLE VARIABLES###############################
-DOMAIN = '127.0.0.1'
+DOMAIN = 'chat-room.myvnc.com'
 PORT = 9091
-PEM_Path = 'certs/crt_127.0.0.1/abs.pem'
+PEM_Path = 'certs/crt_chat-room.myvnc.com/abs.pem'
 IMG_Path = 'images/images/loading.gif'
 ################################################################################
 
@@ -698,7 +698,6 @@ class Profile(QMainWindow):
         with open(filename, 'rb') as file:
             blob_data = file.read()
             if imghdr.what(None, blob_data) not in ['png', 'jpeg']:
-                print(imghdr.what(None, blob_data))
                 return [False]
         return [True, blob_data]
 
@@ -934,7 +933,6 @@ class Game(QMainWindow):
                     pkg = pickle.loads(b"".join(datad))
                     loading_anim(False, self)
                     players = list(pkg.keys())
-                    print(players)
                     c = 0
                     index = players.index(user_data[1])
                     game_players.update({user_data[1]: 0})
@@ -945,13 +943,11 @@ class Game(QMainWindow):
                     for i in players[index + 1:]:
                         c -= 1
                         game_players.update({i: c})
-                    print(game_players)
                     for i, g in game_players.items():
                         self.user_photo = base64.b64decode(pkg[i])
                         self.graphics[g][3].setPixmap(self.img_byte_resize(self.user_photo))
                 elif msg[0] == 1:
                     if shadow_data != msg:
-                        print(msg)
                         for i in msg[1:]:
                             if not i == msg[-1]:
                                 strs = f'{i[0]}\n \n{i[3]}$'

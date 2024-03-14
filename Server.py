@@ -511,25 +511,26 @@ def log_in_calc(data, client):
 
 def game_timer(lobby_name, player_name, start=False):
     index = -1
-    print(f'timer {active_games_events[lobby_name][0].is_set()}, {lobby_name}, {player_name}')
-    if not start:
-        while active_games_events[lobby_name][1].is_alive():
-            time.sleep(0.01)
-        active_games_events[lobby_name][1] = active_games_events[lobby_name][2]
-        active_games_events[lobby_name][2] = None
-    for i in range(len(active_games[lobby_name][1:-1])):
-        if active_games[lobby_name][i + 1][0] == player_name:
-            index = i + 1
-        else:
-            active_games[lobby_name][i + 1][10] = 0
-    for i in reversed(range(30)):
-        if active_games_events[lobby_name][0].is_set(): break
-        active_games[lobby_name][index][10] = int(i)
-        time.sleep(1)
-    if not active_games_events[lobby_name][0].is_set():
-        fold(lobby_name, player_name)
-    active_games_events[lobby_name][0].clear()
-    print('TIMER_close')
+    try:
+        if not start:
+            while active_games_events[lobby_name][1].is_alive():
+                time.sleep(0.01)
+            active_games_events[lobby_name][1] = active_games_events[lobby_name][2]
+            active_games_events[lobby_name][2] = None
+        for i in range(len(active_games[lobby_name][1:-1])):
+            if active_games[lobby_name][i + 1][0] == player_name:
+                index = i + 1
+            else:
+                active_games[lobby_name][i + 1][10] = 0
+        for i in reversed(range(30)):
+            if active_games_events[lobby_name][0].is_set(): break
+            active_games[lobby_name][index][10] = int(i)
+            time.sleep(1)
+        if not active_games_events[lobby_name][0].is_set():
+            fold(lobby_name, player_name)
+        active_games_events[lobby_name][0].clear()
+    except:
+        pass
 
 
 def client_handler(client):
