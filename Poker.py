@@ -1020,6 +1020,7 @@ class Game(QMainWindow):
                     if not msg[2]:
                         if not msg[3]:
                             self.graphics[game_players[msg[1]]][1].setText('FOLDED')
+                            self.graphics[game_players[msg[1]]][2].setVisible(False)
                             if msg[1] == user_data[1]:
                                 self.startup(False)
                         else:
