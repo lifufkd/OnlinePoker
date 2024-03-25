@@ -237,12 +237,12 @@ def game_c(lobby_name):
             if not startup and shadow_data[lobby_name] != active_games[lobby_name]:
                 for i in lobby[lobby_name][7:]:
                     if clients[i][13]:
-                        try:
-                            while True:
+                        while True:
+                            try:
                                 i.send(pickle.dumps(active_games[lobby_name])) # name, card1, card2, money, dealer, small_bl, big_bl, text_bet, step, summ_rnd_bet
                                 break
-                        except:
-                            pass
+                            except:
+                                pass
                 if timer:
                     active_games_events[lobby_name][1] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][index][0], True))
                     active_games_events[lobby_name][1].start()
