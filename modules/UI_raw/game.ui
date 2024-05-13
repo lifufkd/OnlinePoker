@@ -777,37 +777,11 @@ border-radius: 7px;</string>
        <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="label_win">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>220</y>
-        <width>781</width>
-        <height>181</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>ljk_OCRA</family>
-        <pointsize>63</pointsize>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">font-color: black</string>
-      </property>
-      <property name="text">
-       <string>Вы победили</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_lose">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>220</y>
+        <x>120</x>
+        <y>-30</y>
         <width>781</width>
         <height>181</height>
        </rect>
@@ -1182,7 +1156,6 @@ border-radius: 7px;</string>
      <zorder>label_dealer_4</zorder>
      <zorder>label_info_3</zorder>
      <zorder>label_dealer_3</zorder>
-     <zorder>label_win</zorder>
      <zorder>label_lose</zorder>
      <zorder>timer_2</zorder>
      <zorder>timer_3</zorder>
@@ -1329,6 +1302,32 @@ border-radius: 7px;</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
+    <widget class="QLabel" name="label_win">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>-30</y>
+       <width>781</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>ljk_OCRA</family>
+       <pointsize>63</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-color: black</string>
+     </property>
+     <property name="text">
+      <string>Вы победили</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_pot">
     <property name="geometry">

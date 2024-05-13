@@ -17,8 +17,8 @@ import base64
 import pickle
 from pathlib import Path
 from PySide6.QtWidgets import QTableWidgetItem
-from PySide6.QtGui import QPixmap, QImage, QMovie
-from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QGraphicsBlurEffect
+from PySide6.QtGui import QPixmap, QImage
+from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog
 from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool, Qt, QSize, QEvent, QByteArray
 import copy
 import imghdr
@@ -38,9 +38,9 @@ from modules.UI.statistic import Ui_statistic
 from datetime import datetime, timezone
 
 #############################CHANGEABLE VARIABLES###############################
-DOMAIN = 'chat-room.myvnc.com'
+DOMAIN = 'chat-room.ddns.net'
 PORT = 9091
-PEM_Path = 'certs/crt_chat-room.myvnc.com/abs.pem'
+PEM_Path = 'certs/chat-room.ddns.net/abs.pem'
 IMG_Path = 'images/images/loading.gif'
 ################################################################################
 
@@ -1020,6 +1020,7 @@ class Game(QMainWindow):
                     if not msg[2]:
                         if not msg[3]:
                             self.graphics[game_players[msg[1]]][1].setText('FOLDED')
+                            self.graphics[game_players[msg[1]]][2].setVisible(False)
                             if msg[1] == user_data[1]:
                                 self.startup(False)
                         else:
