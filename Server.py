@@ -24,10 +24,10 @@ from treys import Card, Evaluator
 from debug import Debug
 
 #############################CHANGEABLE VARIABLES###############################
-DOMAIN = '127.0.0.1'
+DOMAIN = '192.168.2.16'
 PORT = 9091
-PEM_Path = 'certs/crt_127.0.0.1/abs.pem'
-KEY_Path = 'certs/crt_127.0.0.1/private.key'
+PEM_Path = 'certs/crt_chat-room.myvnc.com/abs.pem'
+KEY_Path = 'certs/crt_chat-room.myvnc.com/private.key'
 NO_PHOTO_Path = 'images/images/no_photo.png'
 DB_name = 'poker.db'
 ################################################################################
@@ -237,9 +237,12 @@ def game_c(lobby_name):
             if not startup and shadow_data[lobby_name] != active_games[lobby_name]:
                 for i in lobby[lobby_name][7:]:
                     if clients[i][13]:
-                        for g in range(3):
-                            i.send(pickle.dumps(active_games[lobby_name])) # name, card1, card2, money, dealer, small_bl, big_bl, text_bet, step, summ_rnd_bet
-                            time.sleep(0.01)
+                        while True:
+                            try:
+                                i.send(pickle.dumps(active_games[lobby_name])) # name, card1, card2, money, dealer, small_bl, big_bl, text_bet, step, summ_rnd_bet
+                                break
+                            except:
+                                pass
                 if timer:
                     active_games_events[lobby_name][1] = threading.Thread(target=game_timer, args=(lobby_name, active_games[lobby_name][index][0], True))
                     active_games_events[lobby_name][1].start()
