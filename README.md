@@ -1,3 +1,4 @@
+![{118C359E-A01F-4E1B-A61C-99B32BAF2199}](https://github.com/user-attachments/assets/ca87f79e-402f-4ea3-a4d3-642b02396817)
 # **Online Poker on Python**
 ## [EN] 
 ### The project can be used as an application template for an online casino, and also allows you to play Texas Hold'em with friends online!
