@@ -1,9 +1,6 @@
 ################################################################################
-## Project developed with SBR, MR_Boombastic, Какой-то китаец
-##
+## Project developed with SBR, MR_Boombastic
 ## Created date: 19.10.23-21.11.23
-##
-## WARNING! All changes made in this file will be lost your mind!
 ################################################################################
 
 import socket
